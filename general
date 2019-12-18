@@ -1,0 +1,55 @@
+xcopy a: b: /s /e /K /D
+/s 複製每個目錄與子目錄，不複製空目錄
+/e 複製每個目錄與子目錄，複製空目錄
+/K 複製檔案屬性
+/D 後面加冒號可複製指令的日期；若沒附日期，只複製較新的檔案
+   /D:m-d-y
+
+
+del * /s /q
+/s 包含子目錄
+/q 不做詢問就刪除
+
+rmdir /s /q test
+/s 包含子目錄
+/q 靜默
+test 要刪除的資料夾名
+
+findstr /i “send mail” *.*
+會搜尋檔案中有 "send" 或 "mail" 的內容
+
+findstr /i /c:"send mail" *.*
+會搜尋檔案中有 "send mail" 的內容
+
+****************************************************************
+@echo off
+set /a count = 1
+:reboot_loop
+  set /a count += 1
+  ECHO %count%
+ 
+  adb wait-for-device
+  adb root
+ 
+  ping 127.0.0.1 -n 300 -w 1000 > nul  
+  adb shell "dmesg > /data/local/tmp/dmesg.txt"
+  adb pull /data/local/tmp/dmesg.txt dmesg.txt
+  move dmesg.txt dmesg%count%.txt
+  FINDSTR "Blocked State" dmesg%count%.txt
+  
+  if %ERRORLEVEL% == 0 (
+    echo there is blocked state
+    pause
+  )
+  
+  adb reboot
+goto reboot_loop
+****************************************************************
+
+for /f "tokens=2 delims=(," %i in (sta1_items_grep.txt) do echo %i >> test1.tx
+
+可在sta1_items_grep.txt檔案中，使用(與,兩個符號切割每行字串，並輸出至test1.txt檔案
+Ref: 用批處理刪除指定字符之前或之後的所有內容 (http://zsyidea.blog.hexun.com.tw/68363197_d.html )
+
+Taskkill /IM application.exe –f
+強制(-f)結束application.exe應用程式
