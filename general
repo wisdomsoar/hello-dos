@@ -36,7 +36,7 @@ set /a count = 1
   adb pull /data/local/tmp/dmesg.txt dmesg.txt
   move dmesg.txt dmesg%count%.txt
   FINDSTR "Blocked State" dmesg%count%.txt
-  
+  :::::::::::這個errorlevel寫在for-loop裡面就會怪怪的！
   if %ERRORLEVEL% == 0 (
     echo there is blocked state
     pause
